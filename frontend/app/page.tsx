@@ -1,4 +1,31 @@
-import Image from "next/image";
+import {
+  DynamicContextProvider,
+  DynamicWidget,
+} from "@dynamic-labs/sdk-react-core";
+import { EthersExtension } from "@dynamic-labs/ethers-v5";
+
+import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
+
+
+export default function App() {
+  return (
+    <DynamicContextProvider
+      settings={{
+        // Find your environment id at https://app.dynamic.xyz/dashboard/developer
+        environmentId: "",
+        walletConnectorExtensions: [EthersExtension],
+        walletConnectors: [EthereumWalletConnectors],
+      }}
+    >
+      <DynamicWidget />
+    </DynamicContextProvider>
+  );
+};
+
+
+
+
+/* import Image from "next/image";
 
 export default function Home() {
   return (
@@ -114,4 +141,4 @@ export default function Home() {
       </div>
     </main>
   );
-}
+} */
