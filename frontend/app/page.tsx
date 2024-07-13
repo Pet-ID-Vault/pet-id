@@ -8,11 +8,13 @@ import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 
 
 export default function App() {
+  const environmentId: string = process.env.DYNAMIC_ENVIRONMENT_ID || "";
+
   return (
     <DynamicContextProvider
       settings={{
         // Find your environment id at https://app.dynamic.xyz/dashboard/developer
-        environmentId: "",
+        environmentId: environmentId,
         walletConnectorExtensions: [EthersExtension],
         walletConnectors: [EthereumWalletConnectors],
       }}
