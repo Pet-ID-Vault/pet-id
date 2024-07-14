@@ -8,11 +8,30 @@ import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 
 
 export default function App() {
+  const evmNetworks = [
+    {
+      blockExplorerUrls: ["https://explorer.helium.fhenix.zone/"],
+      chainId: 8008135,
+      iconUrls: ["https://docs.fhenix.zone/img/logo-black.svg", "https://docs.fhenix.zone/img/logo-white.svg"],
+      name: "Fhenix Helium",
+      nativeCurrency: {
+        decimals: 18,
+        name: "Fhenix Helium",
+        symbol: "tFHE",
+      },
+      networkId: 8008135,
+      rpcUrls: ["https://api.helium.fhenix.zone"],
+    },
+  ];
+
+  const environmentId: string = process.env.DYNAMIC_ENVIRONMENT_ID || "";
+
   return (
     <DynamicContextProvider
       settings={{
         // Find your environment id at https://app.dynamic.xyz/dashboard/developer
-        environmentId: "",
+        environmentId: environmentId,
+        overrides: { evmNetworks },
         walletConnectorExtensions: [EthersExtension],
         walletConnectors: [EthereumWalletConnectors],
       }}

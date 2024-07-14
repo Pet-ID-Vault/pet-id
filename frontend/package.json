@@ -1,30 +1,49 @@
 {
-  "name": "pet-id",
+  "name": "@dynamic-labs/react-18-ethers-wagmi",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
   "dependencies": {
-    "@dynamic-labs/ethereum": "^2.3.0",
-    "@dynamic-labs/ethers-v5": "^2.3.0",
-    "@dynamic-labs/sdk-react-core": "^2.3.0",
-    "next": "14.2.5",
-    "react": "^18",
-    "react-dom": "^18",
-    "viem": "^2.17.3"
+    "@dynamic-labs/ethereum": "*",
+    "@dynamic-labs/ethers-v5": "*",
+    "@dynamic-labs/sdk-react-core": "*",
+    "@dynamic-labs/wagmi-connector": "*",
+    "@tanstack/react-query": "^5.51.1",
+    "ethers": "^5.7.2",
+    "fhenixjs": "^0.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "viem": "^2.17.3",
+    "wagmi": "*"
+  },
+  "overrides": {
+    "typescript": "4.9.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.5",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "tailwindcss": "^3.4.3"
   }
 }
