@@ -1,16 +1,13 @@
 import { DeployFunction } from "hardhat-deploy/types";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
 import chalk from "chalk";
-
-const hre = require("hardhat");
+import { fhenixjs, ethers, network, deployments } from "hardhat";
 
 const func: DeployFunction = async function () {
-  const { fhenixjs, ethers } = hre;
-  const { deploy } = hre.deployments;
+  const { deploy } = deployments;
   const [signer] = await ethers.getSigners();
 
   if ((await ethers.provider.getBalance(signer.address)).toString() === "0") {
-    if (hre.network.name === "localfhenix") {
+    if (network.name === "localfhenix") {
       await fhenixjs.getFunds(signer.address);
     } else {
         console.log(
@@ -19,14 +16,14 @@ const func: DeployFunction = async function () {
     }
   }
 
-  const counter = await deploy("Counter", {
+  const counter = await deploy("Pet", {
     from: signer.address,
     args: [],
     log: true,
     skipIfAlreadyDeployed: false,
   });
 
-  console.log(`Counter contract: `, counter.address);
+  console.log(`Pet contract: `, counter.address);
 };
 
 export default func;

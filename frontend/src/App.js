@@ -22,22 +22,41 @@ const fhenixChain = {
   networkId: 8008135,
   rpcUrls: ["https://api.helium.fhenix.zone"],
 };
+const localChain = {
+  blockExplorerUrls: [],
+  chainId: 412346,
+  iconUrls: ["https://docs.fhenix.zone/img/logo-black.svg", "https://docs.fhenix.zone/img/logo-white.svg"],
+  name: "Local Fhenix",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Fhenix Helium",
+    symbol: "tFHE",
+  },
+  networkId: 412346,
+  rpcUrls: ["http://localhost:42069"],
+};
 const fhenix = defineChain({
   ...fhenixChain,
   id: fhenixChain.chainId,
 })
+const hFhenix = defineChain({
+  ...localChain,
+  id: localChain.chainId,
+})
 
 const config = createConfig({
-  chains: [fhenix],
+  chains: [fhenix, hFhenix],
   multiInjectedProviderDiscovery: false,
   transports: {
     [fhenix.id]: http(),
+    [hFhenix.id]: http(),
   },
 });
 
 const queryClient = new QueryClient();
 const evmNetworks = [
   fhenixChain,
+  localChain,
 ];
 
 
