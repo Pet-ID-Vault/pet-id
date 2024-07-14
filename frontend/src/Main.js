@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DynamicWidget, useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import { EncryptionTypes, FhenixClient } from 'fhenixjs';
 import { ethers } from 'ethers';
@@ -6,20 +6,19 @@ import Form from './components/Form';
 import FormDog from './components/FormDog';
 import { asBytes32 } from './utils/format';
 import ExplorerLink from './components/ExplorerLink';
+import { FormContext } from './context';
 
 const contractAddress = '0xA71a76eaF950150ecae8F8D0Ac94f40909d8f356';
 const abi = require('./abis/pets.json');
 const provider = new ethers.providers.JsonRpcProvider('https://api.helium.fhenix.zone');
-const client = new FhenixClient({provider});
+const client = new FhenixClient({ provider });
 
 
 const Main = () => {
   const { primaryWallet } = useDynamicContext();
-  const [status, setStatus] = useState(0);
-  const [ownerData, setOwnerData] = useState({});
-  const [dogData, setDogData] = useState({});
-  const [txHash, setTxHash] = useState('');
-  const [dogPhoto, setDogPhoto] = useState('');
+  const {
+    status, setStatus, ownerData, setOwnerData, dogData, setDogData, txHash, setTxHash, dogPhoto, setDogPhoto
+  } = useContext(FormContext);
 
   useEffect(() => {
     if (!primaryWallet)  {
