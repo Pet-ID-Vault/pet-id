@@ -1,10 +1,6 @@
-"use client"
-
-import Image from "next/image";
-
 export default function Form() {
     return (
-        <div className="flex flex-col items-center p-6 bg-gray-50 min-h-screen">
+        <div className="flex flex-col items-center p-6 bg-gray-50">
             <h1 className="text-2xl font-semibold mb-6">Owner Information</h1>
 
             <label className="w-full max-w-lg flex items-center p-4 border border-gray-300 bg-white shadow-sm rounded-xl mb-4">

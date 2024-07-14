@@ -1,7 +1,4 @@
-"use client"
-
 import { useState } from "react";
-import Image from "next/image";
 
 export default function FormDog() {
     const [dogImage, setDogImage] = useState(null);
@@ -14,12 +11,12 @@ export default function FormDog() {
     };
 
     return (
-        <div className="flex flex-col items-center p-6 bg-gray-50 min-h-screen">
+        <div className="flex flex-col items-center p-6 bg-gray-50">
             <h1 className="text-2xl font-semibold mb-6">Dog Information</h1>
             
             {dogImage && (
                 <div className="mb-4">
-                    <Image
+                    <img
                         src={dogImage}
                         alt="Dog"
                         width={150}

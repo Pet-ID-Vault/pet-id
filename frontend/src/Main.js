@@ -1,0 +1,541 @@
+import { useEffect } from 'react';
+import { DynamicWidget, useDynamicContext } from "@dynamic-labs/sdk-react-core";
+import Form from './components/Form';
+import FormDog from './components/FormDog';
+import { ethers } from 'ethers';
+
+const contractAddress = ethers.constants.AddressZero;
+
+const abi = [
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "NotPermitted",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotPetOwner",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "PetAlreadyRegistered",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "publicUuid",
+        "type": "bytes32"
+      }
+    ],
+    "name": "NewPet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnerUpdate",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "publicUuid",
+        "type": "bytes32"
+      }
+    ],
+    "name": "PetFound",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "publicUuid",
+        "type": "bytes32"
+      }
+    ],
+    "name": "PetLost",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "publicUuid",
+        "type": "bytes32"
+      }
+    ],
+    "name": "PetUpdate",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "readOwnerData",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bytes32",
+            "name": "physicalAddress",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "name",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "phoneNumber",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "emailAddress",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "emailDomain",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bool",
+            "name": "isReachable",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct IPet.OutOwnerStruct",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "publicUuid",
+        "type": "bytes32"
+      }
+    ],
+    "name": "readPetData",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "name",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "breed",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "enum IPet.Gender",
+            "name": "gender",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bool",
+            "name": "pedigree",
+            "type": "bool"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "breeder",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "vaccines",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes32",
+                "name": "key",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "string",
+                "name": "value",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct IPet.OutPetAttribute[]",
+            "name": "attributes",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct IPet.OutPetStruct",
+        "name": "pet",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "publicUuid",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "name",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "breed",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "enum IPet.Gender",
+        "name": "gender",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bool",
+        "name": "pedigree",
+        "type": "bool"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct inEuint256",
+        "name": "breeder",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct inEuint256",
+        "name": "vaccines",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct inEuint256",
+            "name": "key",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct inEuint256[]",
+            "name": "value",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct IPet.InPetAttribute[]",
+        "name": "attributes",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "registerPet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "publicUuid",
+        "type": "bytes32"
+      }
+    ],
+    "name": "reportFoundPet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "publicUuid",
+        "type": "bytes32"
+      }
+    ],
+    "name": "reportLostPet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct inEuint256",
+            "name": "physicalAddress",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct inEuint256",
+            "name": "name",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct inEuint256",
+            "name": "phoneNumber",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct inEuint256",
+            "name": "emailAddress",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct inEuint256",
+            "name": "emailDomain",
+            "type": "tuple"
+          },
+          {
+            "internalType": "bool",
+            "name": "isReachable",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct IPet.InOwnerStruct",
+        "name": "ownerData",
+        "type": "tuple"
+      }
+    ],
+    "name": "updateOwnerData",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "publicUuid",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "name",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "breed",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "enum IPet.Gender",
+        "name": "gender",
+        "type": "uint8"
+      },
+      {
+        "internalType": "bool",
+        "name": "pedigree",
+        "type": "bool"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct inEuint256",
+        "name": "breeder",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct inEuint256",
+        "name": "vaccines",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct inEuint256",
+            "name": "key",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+              }
+            ],
+            "internalType": "struct inEuint256[]",
+            "name": "value",
+            "type": "tuple[]"
+          }
+        ],
+        "internalType": "struct IPet.InPetAttribute[]",
+        "name": "attributes",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "updatePetInfo",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+];
+
+const Main = () => {
+  const { primaryWallet } = useDynamicContext();
+
+  useEffect(() => {
+    if (!primaryWallet) return;
+    console.log(primaryWallet);
+  }, [primaryWallet]);
+
+  const sendTx = async () => {
+    const web3Provider = await primaryWallet.connector.ethers.getSigner();
+    console.log(web3Provider);
+    const contract = new ethers.Contract(contractAddress, abi, web3Provider)
+    console.log({ contract });
+  }
+
+  return (
+    <div>
+      <div className="flex justify-center">
+        <DynamicWidget />
+      </div>
+      <Form />
+      <FormDog />
+      <button onClick={sendTx}>Send Transaction</button>
+    </div>
+  );
+}
+
+export default Main;
