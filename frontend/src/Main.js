@@ -7,6 +7,7 @@ import FormDog from './components/FormDog';
 import { asBytes32 } from './utils/format';
 import ExplorerLink from './components/ExplorerLink';
 import { FormContext } from './context';
+import Profile from './components/Profile';
 
 const contractAddress = '0xA71a76eaF950150ecae8F8D0Ac94f40909d8f356';
 const abi = require('./abis/pets.json');
@@ -21,6 +22,11 @@ const Main = () => {
   } = useContext(FormContext);
 
   useEffect(() => {
+    const url = getCurrentRoute();
+    if (url === 'profile') {
+      setStatus(-1);
+      return;
+    }
     if (!primaryWallet)  {
       setStatus(0);
       return;
@@ -94,6 +100,7 @@ const Main = () => {
       <div className="flex justify-center">
         <DynamicWidget/>
       </div>
+      {status === -1 && <Profile />}
       {status === 1 && <FormDog onSubmit={saveDogData} />}
       {status === 2 && <Form onSubmit={saveOwnerData} />}
       {status === 3 && <ExplorerLink hash={txHash} />}
