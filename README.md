@@ -49,6 +49,10 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+
+[Pitch Deck](https://www.canva.com/design/DAGKz9MVwLI/WCQ52_4qP-ZP851flMBkSA/edit)
+
+
 <div align="center">
   <a href="https://pet-id.eth.pm">
     <img src="statics/screenshot.png" alt="Logo" width="200">
