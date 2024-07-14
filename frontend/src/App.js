@@ -2,63 +2,13 @@ import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
 import { EthersExtension } from "@dynamic-labs/ethers-v5";
 import { DynamicWagmiConnector } from "@dynamic-labs/wagmi-connector";
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
-import { createConfig, WagmiProvider } from "wagmi";
+import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-import { http, defineChain } from "viem";
+import { config, evmNetworks } from './utils/chain';
 
 import Main from "./Main";
 
-const fhenixChain = {
-  blockExplorerUrls: ["https://explorer.helium.fhenix.zone/"],
-  chainId: 8008135,
-  iconUrls: ["https://docs.fhenix.zone/img/logo-black.svg", "https://docs.fhenix.zone/img/logo-white.svg"],
-  name: "Fhenix Helium",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Fhenix Helium",
-    symbol: "tFHE",
-  },
-  networkId: 8008135,
-  rpcUrls: ["https://api.helium.fhenix.zone"],
-};
-const localChain = {
-  blockExplorerUrls: [],
-  chainId: 412346,
-  iconUrls: ["https://docs.fhenix.zone/img/logo-black.svg", "https://docs.fhenix.zone/img/logo-white.svg"],
-  name: "Local Fhenix",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Fhenix Helium",
-    symbol: "tFHE",
-  },
-  networkId: 412346,
-  rpcUrls: ["http://localhost:42069"],
-};
-const fhenix = defineChain({
-  ...fhenixChain,
-  id: fhenixChain.chainId,
-})
-const hFhenix = defineChain({
-  ...localChain,
-  id: localChain.chainId,
-})
-
-const config = createConfig({
-  chains: [fhenix, hFhenix],
-  multiInjectedProviderDiscovery: false,
-  transports: {
-    [fhenix.id]: http(),
-    [hFhenix.id]: http(),
-  },
-});
-
 const queryClient = new QueryClient();
-const evmNetworks = [
-  fhenixChain,
-  localChain,
-];
-
 
 const App = () => {
   return (
